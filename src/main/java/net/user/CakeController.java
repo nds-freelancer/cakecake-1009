@@ -1,8 +1,8 @@
 package net.user;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import net.user.entity.Cake;
 import net.user.entity.CakeDto;
 import net.user.entity.OrderCa;
+import net.user.entity.OrderCaView;
 import net.user.entity.OrderDto;
 import net.user.service.CakeService;
 import net.user.service.OrderCakeService;
@@ -126,7 +128,8 @@ public String contact(ModelMap model) {
 	  orCa.setDatecreate(orderDto.getDateorder());
 	  orCa.setDateship(orderDto.getDateship());
 	  orCa.setPhone(orderDto.getPhone());
-	  
+	  orCa.setAddress(orderDto.getAddress());
+	  orCa.setStatus("0");
 	  orderCakeService.updateOrderCake(orCa);
 	  
 	  System.out.println("Save1:"+orderDto.getCakename()+orderDto.getNumber()
@@ -155,7 +158,38 @@ public String contact(ModelMap model) {
   		
   		ObjectMapper objectMapper = new ObjectMapper();
   		
-  		byte[] byteText = null;
+  		List<OrderCa> listOrderCa = orderCakeService.getAllOrderCake(phone);
+  		List<Cake> listCake = cakeService.getAllCakes();
+  		List<OrderCaView> listOcView = new ArrayList<OrderCaView>();
+  		
+  		for(int i=0; i< listOrderCa.size();i++) {
+  			OrderCaView caView = new OrderCaView();
+  			caView.setCakeid(listOrderCa.get(i).getCakeid());
+  			caView.setNumber(listOrderCa.get(i).getNumber());
+  			caView.setPhone(listOrderCa.get(i).getPhone());
+  			caView.setCustomer(listOrderCa.get(i).getCustomer());
+  			caView.setDateship(listOrderCa.get(i).getDateship());
+  			caView.setDatecreate(listOrderCa.get(i).getDatecreate());
+ 			caView.setAddress(listOrderCa.get(i).getAddress());
+  			caView.setStatus(listOrderCa.get(i).getStatus());
+  			
+  			for(int j=0; j< listCake.size();j++) {
+  				if(listOrderCa.get(i).getCakeid() == listCake.get(j).getCakeid())
+  					caView.setCakename(listCake.get(j).getCakename());
+  			}
+  			
+  			if(listOrderCa.get(i).getStatus().equals("1")) {
+  				caView.setStatusor("Da giao");
+  			}else {
+  				caView.setStatusor("Chua giao");
+  			}
+  			
+  			listOcView.add(caView);
+  		}
+  		
+  		ArrayNode listData = objectMapper.valueToTree(listOcView);
+  		byte[] byteText =listData.toString().getBytes(Charset.forName("UTF-8"));
+  		System.out.print("byteText:"+byteText);
 
   		return byteText;
 }

@@ -40,8 +40,13 @@ public class OrderCa {
     @Column(name = "price")
     private Integer price;
     
+    @Column(name = "address")
+	private String address;
+
+    @Column(name = "status")
+	private String status;
+  
     
-	
 	public Integer getOrderid() {
 		return orderid;
 	}
@@ -106,5 +111,20 @@ public class OrderCa {
 	public void setDatecreate(String datecreate) {
 		this.datecreate = datecreate;
 	}
-	
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
 }

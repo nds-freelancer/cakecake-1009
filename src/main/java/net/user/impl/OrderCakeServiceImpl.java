@@ -1,9 +1,13 @@
 package net.user.impl;
 
+import java.util.List;
+
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
 import net.user.entity.OrderCa;
+import net.user.entity.OrderCaView;
 import net.user.repository.OrderRepository;
 import net.user.service.OrderCakeService;
 
@@ -15,14 +19,17 @@ public class OrderCakeServiceImpl implements OrderCakeService {
 
 	@Override
 	public OrderCa updateOrderCake(OrderCa orderCake) {
-		System.out.println("OrderCake:"+orderRepository+orderCake.getCakeid()+":"+orderCake.getCakeid()+orderCake.getOrderid()+":");
-//		OrderCa oc = new OrderCa();
-//		oc.setOrderid(11);
-//		oc.setCakeid(12121);
-//		oc.setDateCreate("12/12/1222");
-		
+
 		OrderCa updatedOrderCake = orderRepository.saveAndFlush(orderCake);
-        return orderCake;
+        return updatedOrderCake;
+	}
+
+	@Override
+	public List<OrderCa> getAllOrderCake(String phone) {
+		
+		List<OrderCa> lstOrderCake = orderRepository.findAllByPhone(phone);
+
+		return lstOrderCake;
 	}
 
 }
