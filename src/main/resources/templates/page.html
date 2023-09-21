@@ -10,7 +10,11 @@
             <div th:replace="/fragments/categories"></div>
             <div class="col">
                 <div class="col-7" th:utext="${page.content}"></div>
-                <div class="col"></div>
+                <div class="col-14" th:each="quest: ${lstQ}">
+						   	<h6 style="font-size:20px;"><td th:if="${slug} == java or ${slug} == english" th:utext="${quest.question}"></td></h6>
+						   	<h6 style="font-size:14px; font-weight: 300"><td th:if="${slug} == java or ${slug} == english" th:text="${quest.answer}"></td></h6>
+
+                 </div>
             </div>
         </div>
     </div>
